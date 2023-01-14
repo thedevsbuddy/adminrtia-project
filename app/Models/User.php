@@ -12,6 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use JetBrains\PhpStorm\Pure;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Contracts\Role;
 use Spatie\Permission\Traits\HasRoles;
@@ -20,7 +21,16 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles, HasExcludeScope, HasMailable;
 
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'name',
+        'email',
+        'username',
+        'phone',
+        'avatar',
+        'otp',
+        'password',
+        'email_verified_at'
+    ];
 
     protected $hidden = [
         'password',
@@ -92,5 +102,10 @@ class User extends Authenticatable
     public function verificationToken(): HasOne
     {
         return $this->hasOne(VerificationToken::class);
+    }
+
+    #[Pure] public function hasDefaultAvatar(): bool
+    {
+        return Str::contains($this->avatar, 'default-avatar.png');
     }
 }

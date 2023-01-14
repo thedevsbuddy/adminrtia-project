@@ -4,45 +4,42 @@ namespace App\Http\Controllers\Adminr;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use Inertia\Response;
+use Inertia\ResponseFactory;
 use Spatie\Permission\Models\Role;
 
 
 class UserController extends Controller
 {
-    protected int $limit = 10;
+    protected int $paginationLimit = 10;
 
-    public function index()
+    public function index(): Response|ResponseFactory|RedirectResponse
     {
         try {
-//            $users = User::notRole(['admin', 'super_admin'])->paginate($this->limit);
-            $users = User::paginate($this->limit);
-            return inertia('Adminr/Users/Index', [
-                'users' => $users,
-            ]);
+//            $users = User::notRole(['admin', 'super_admin'])->paginate($this->paginationLimit);
+            $users = User::paginate($this->paginationLimit);
+            return inertia('Adminr/Users/Index', compact('users'));
         } catch (\Exception | \Error $e) {
             return $this->backError('Error : ' . $e->getMessage());
         }
     }
 
-    public function create(): View|RedirectResponse
+    public function create(): Response|ResponseFactory|RedirectResponse
     {
         try {
             $roles = Role::where('name', '!=', 'super_admin')->get();
-            return view('adminr.users.create', compact('roles'));
-        } catch (\Exception $e) {
-            return $this->backError('Error : ' . $e->getMessage());
-        } catch (\Error $e) {
+            return inertia('Adminr/Users/Create', compact('roles'));
+        } catch (\Exception | \Error $e) {
             return $this->backError('Error : ' . $e->getMessage());
         }
     }
 
-
-
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): JsonResponse|RedirectResponse
     {
         $request->validate([
             'name' => ['required'],
@@ -72,7 +69,7 @@ class UserController extends Controller
 
             $user->assignRole(Role::where('id', $request->get('role'))->first());
 
-            return $this->redirectSuccess(route(config('adminr.route_prefix') . '.users.index'), 'User created successfully!');
+            return $this->backSuccess('User created successfully!');
         } catch (\Exception $e) {
             return $this->backError('Error : ' . $e->getMessage());
         } catch (\Error $e) {
@@ -81,11 +78,14 @@ class UserController extends Controller
     }
 
 
-    public function edit(User $user): View|RedirectResponse
+    public function edit(User $user): Response|ResponseFactory|RedirectResponse
     {
         try {
             $roles = Role::where('name', '!=', 'super_admin')->get();
-            return view('adminr.users.edit', compact('user', 'roles'));
+            $user->load(['roles' => function($query) {
+                $query->first();
+            }]);
+            return inertia('Adminr/Users/Edit', compact('user', 'roles'));
         } catch (\Exception $e) {
             return $this->backError('Error : ' . $e->getMessage());
         } catch (\Error $e) {
@@ -137,7 +137,7 @@ class UserController extends Controller
             // Update User role if selected new
             $user->syncRoles(Role::where('id', $request->get('role'))->first());
 
-            return $this->redirectSuccess(route(config('adminr.route_prefix').'.users.index'), 'User updated successfully!');
+            return $this->backSuccess('User updated successfully!');
         } catch (\Exception $e) {
             return $this->backError('Error : ' . $e->getMessage());
         } catch (\Error $e) {
@@ -149,7 +149,7 @@ class UserController extends Controller
     public function destroy(User $user): RedirectResponse
     {
         try {
-            if (!Str::contains($user->avatar, 'default-avatar.png')) {
+            if (!$user->hasDefaultAvatar()) {
                 $this->deleteStorageFile($user->avatar);
             }
             $user->delete();
