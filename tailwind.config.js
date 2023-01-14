@@ -1,3 +1,4 @@
+const colors = require('tailwindcss/colors');
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -10,6 +11,9 @@ module.exports = {
       colors: {
         primary: {
           DEFAULT: "#a036e2",
+        },
+        accent: {
+          DEFAULT: colors.slate["800"],
         },
         light: {
           DEFAULT: "#faf1ff",

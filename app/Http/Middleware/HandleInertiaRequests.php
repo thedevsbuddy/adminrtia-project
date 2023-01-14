@@ -41,6 +41,7 @@ class HandleInertiaRequests extends Middleware
             'currentRoute' => Route::currentRouteName(),
             'auth.id' => auth()->id(),
             'auth.user' => auth()->user(),
+            'splash.success' => session()->get('success'),
         ]);
     }
 }

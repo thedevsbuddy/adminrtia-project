@@ -1,12 +1,14 @@
 require('./bootstrap')
 
-import { createApp, h } from 'vue'
-import { createInertiaApp, Link  } from '@inertiajs/inertia-vue3'
+import {createApp, h} from 'vue'
+import {createInertiaApp, Link, Head} from '@inertiajs/inertia-vue3'
+import {Inertia} from '@inertiajs/inertia'
 import AdminrLayout from "./Layouts/AdminrLayout";
-import Icon from "./Components/Icon"
-import Dropdown from "./Components/Global/Dropdown";
-import DropdownItem from "./Components/Global/DropdownItem";
-import PageHeader from "./Components/Adminr/PageHeader";
+import { InertiaProgress } from '@inertiajs/progress'
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
+
+window.Inertia = Inertia;
 
 createInertiaApp({
     resolve: name => {
@@ -14,16 +16,26 @@ createInertiaApp({
         page.layout = page.layout || AdminrLayout
         return page
     },
-    setup({ el, App, props, plugin }) {
-        createApp({ render: () => h(App, props) })
+    setup({el, App, props, plugin}) {
+        const app = createApp({render: () => h(App, props)})
             .use(plugin)
-            .component('icon', Icon)
-            .component('dropdown', Dropdown)
-            .component('dropdown-item', DropdownItem)
-            .component('page-header', PageHeader)
-            .component('Link', Link)
             .mixin({methods: {route}})
-            .mount(el)
+
+        app.component('Link', Link)
+        app.component('Head', Head)
+
+        /// Loading all components automatically
+        const files = require.context('./Components/', true, /\.vue$/i)
+        files.keys().map(key => app.component(key.split('/').pop().split('.')[0], files(key).default))
+        app.config.devtools = true;
+
+        const options = {
+            // You can set your default options here
+        };
+
+        app.use(Toast, options);
+        app.mount(el)
     },
 })
 
+InertiaProgress.init();

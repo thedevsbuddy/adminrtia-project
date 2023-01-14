@@ -43,7 +43,5 @@ class UsersTableSeeder extends Seeder
         $superAdmin->assignRole(Role::where('name', 'super_admin')->first());
         $admin->assignRole(Role::where('name', 'admin')->first());
         $user->assignRole(Role::where('name', 'user')->first());
-
-        User::factory()->count(50)->create();
     }
 }

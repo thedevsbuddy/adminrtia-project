@@ -7,8 +7,15 @@ use Spatie\Permission\Models\Role;
 
 
 if (!function_exists('getSetting')) {
-    function getSetting($option): ?string
+    function getSetting($option = null): ?string
     {
+        if($option == null) {
+            return Cache::remember(
+                key: 'allSettings',
+                ttl: config('adminr.cache_remember_time'),
+                callback: fn() => Setting::get()
+            );
+        }
         return Cache::remember(
             key: 'getSetting' . Str::studly($option),
             ttl: config('adminr.cache_remember_time'),

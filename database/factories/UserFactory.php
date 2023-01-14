@@ -2,40 +2,38 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use JetBrains\PhpStorm\ArrayShape;
+use Spatie\Permission\Models\Role;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
  */
 class UserFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition()
+    public function definition(): array
     {
         return [
-            'name' => fake()->unique()->name ?? 'Test User ' . Str::random(5),
+            'name' => fake()->unique()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'username' => fake()->userName,
-            'phone' => fake()->unique()->phoneNumber,
+            'username' => fake()->unique()->userName(),
+            'phone' => fake()->unique()->phoneNumber(),
             'password' => bcrypt('password'),
             'email_verified_at' => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 
-    /**
-     * Indicate that the model's email address should be unverified.
-     *
-     * @return static
-     */
-    public function unverified()
+    public function configure(): UserFactory
     {
-        return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
-        ]);
+        return $this->afterMaking(function (User $user) {
+//            $user->assignRole(Role::where('name', 'user')->first());
+        })->afterCreating(function (User $user) {
+            $user->assignRole(Role::where('name', 'user')->value('id'));
+        });
     }
+
 }
