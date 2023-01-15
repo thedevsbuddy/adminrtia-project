@@ -1,32 +1,46 @@
-require('./bootstrap')
+require("./bootstrap");
+require("./Helpers/String");
 
-import {createApp, h} from 'vue'
-import {createInertiaApp, Link, Head} from '@inertiajs/inertia-vue3'
-import {Inertia} from '@inertiajs/inertia'
+import { createApp, h } from "vue";
+import { createInertiaApp, Link, Head } from "@inertiajs/inertia-vue3";
+import { Inertia } from "@inertiajs/inertia";
 import AdminrLayout from "./Layouts/AdminrLayout";
-import { InertiaProgress } from '@inertiajs/progress'
+import { InertiaProgress } from "@inertiajs/progress";
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 
 window.Inertia = Inertia;
 
-createInertiaApp({
-    resolve: name => {
-        const page = require(`./Pages/${name}`).default
-        page.layout = page.layout || AdminrLayout
-        return page
-    },
-    setup({el, App, props, plugin}) {
-        const app = createApp({render: () => h(App, props)})
-            .use(plugin)
-            .mixin({methods: {route}})
+function asset(path) {
+    if (path.includes("http://") || path.includes("https://")) return path;
+    var base_path = window._asset || "";
+    return base_path + path;
+}
 
-        app.component('Link', Link)
-        app.component('Head', Head)
+createInertiaApp({
+    resolve: (name) => {
+        const page = require(`./Pages/${name}`).default;
+        page.layout = page.layout || AdminrLayout;
+        return page;
+    },
+    setup({ el, App, props, plugin }) {
+        const app = createApp({ render: () => h(App, props) })
+            .use(plugin)
+            .mixin({ methods: { route, asset } });
+
+        app.component("Link", Link);
+        app.component("Head", Head);
 
         /// Loading all components automatically
-        const files = require.context('./Components/', true, /\.vue$/i)
-        files.keys().map(key => app.component(key.split('/').pop().split('.')[0], files(key).default))
+        const files = require.context("./Components/", true, /\.vue$/i);
+        files
+            .keys()
+            .map((key) =>
+                app.component(
+                    key.split("/").pop().split(".")[0],
+                    files(key).default
+                )
+            );
         app.config.devtools = true;
 
         const options = {
@@ -34,8 +48,8 @@ createInertiaApp({
         };
 
         app.use(Toast, options);
-        app.mount(el)
+        app.mount(el);
     },
-})
+});
 
 InertiaProgress.init();

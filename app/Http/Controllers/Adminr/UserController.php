@@ -21,9 +21,15 @@ class UserController extends Controller
     public function index(): Response|ResponseFactory|RedirectResponse
     {
         try {
-//            $users = User::notRole(['admin', 'super_admin'])->paginate($this->paginationLimit);
-            $users = User::paginate($this->paginationLimit);
-            return inertia('Adminr/Users/Index', compact('users'));
+            $users = User::when(request()->has('term') && !is_null(request()->get('term')), function ($query){
+                $query->where('name', 'LIKE', "%".request()->get('term')."%")
+                ->orWhere('email', 'LIKE', "%".request()->get('term')."%")
+                ->orWhere('phone', 'LIKE', "%".request()->get('term')."%");
+            })->distinct()->paginate($this->paginationLimit);
+            return inertia('Adminr/Users/Index', [
+                'users' => $users,
+                'query' => request()->all(),
+            ]);
         } catch (\Exception | \Error $e) {
             return $this->backError('Error : ' . $e->getMessage());
         }
@@ -113,7 +119,8 @@ class UserController extends Controller
                 return  $this->backError(message: "Username is already taken!");
             }
 
-            if ($request->hasFile('avatar')) {
+
+            if ($request->file('avatar')) {
                 $avatar = $this->uploadFile($request->file('avatar'), 'users/avatars')->getFilePath();
                 $this->deleteStorageFile($user->avatar);
             } else {
@@ -135,7 +142,7 @@ class UserController extends Controller
             }
 
             // Update User role if selected new
-            $user->syncRoles(Role::where('id', $request->get('role'))->first());
+            $user->syncRoles([$request->get('role')]);
 
             return $this->backSuccess('User updated successfully!');
         } catch (\Exception $e) {

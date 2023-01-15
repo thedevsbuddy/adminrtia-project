@@ -21,16 +21,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles, HasExcludeScope, HasMailable;
 
-    protected $fillable = [
-        'name',
-        'email',
-        'username',
-        'phone',
-        'avatar',
-        'otp',
-        'password',
-        'email_verified_at'
-    ];
+    protected $guarded = ['id'];
 
     protected $hidden = [
         'password',
@@ -40,6 +31,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    protected $appends = [
+        'is_verified',
+    ];
+
+
 
     public function avatar(): Attribute
     {
@@ -107,5 +104,14 @@ class User extends Authenticatable
     #[Pure] public function hasDefaultAvatar(): bool
     {
         return Str::contains($this->avatar, 'default-avatar.png');
+    }
+
+    public function isVerified(): Attribute
+    {
+        return Attribute::make(
+            get: function() {
+                return $this->email_verified_at != null;
+            },
+        );
     }
 }
