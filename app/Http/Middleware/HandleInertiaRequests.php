@@ -42,6 +42,7 @@ class HandleInertiaRequests extends Middleware
             'auth.id' => auth()->id(),
             'auth.user' => auth()->user(),
             'splash.success' => session()->get('success'),
+            'splash.error' => session()->get('error'),
         ]);
     }
 }

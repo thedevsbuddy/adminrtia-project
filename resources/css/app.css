@@ -20,23 +20,37 @@
         border-radius: 5px;
         border: 1px solid #F5F5F5;
     }
+
     body {
         font-family: "Work sans", sans-serif;
         @apply text-slate-600 font-medium;
     }
+
 }
 
 @layer components {
     .heading {
         @apply text-3xl font-bold text-slate-500;
     }
+
     .heading2 {
         @apply text-2xl font-bold text-slate-500;
     }
+
     .heading3 {
         @apply text-xl font-bold text-slate-500;
     }
+
     .heading-sm {
         @apply text-base font-medium text-slate-500;
+    }
+
+    .v-md-editor {
+        box-shadow: none !important;
+        @apply border;
+    }
+
+    code {
+        @apply text-red-400 bg-slate-100 rounded text-xs px-1 py-0.5 leading-tight;
     }
 }

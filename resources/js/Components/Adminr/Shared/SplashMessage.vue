@@ -14,9 +14,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
 import { XMarkIcon } from "@heroicons/vue/24/outline"
-import { useTimeout } from '@vueuse/core'
 const props = defineProps({
     message: String,
 });

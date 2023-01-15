@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Adminr;
 
 use App\Http\Controllers\Controller;
 use App\Models\MailTemplate;
@@ -12,25 +12,31 @@ use Illuminate\View\View;
 
 class TemplateController extends Controller
 {
-    public function index(): View|RedirectResponse
+    public function index()
     {
-        try{
-            $templates = MailTemplate::paginate(10);
-            return view('adminr.templates.index', compact('templates'));
-        } catch (\Exception $e){
-            return $this->backError('Error: ' . $e->getMessage());
-        } catch (\Error $e){
+        try {
+            $templates = MailTemplate::when(request()->has('term') && !is_null(request()->get('term')), function ($query) {
+                $query->where('subject', 'LIKE', "%" . request()->get('term') . "%")
+                    ->orWhere('purpose', 'LIKE', "%" . request()->get('term') . "%")
+                    ->orWhere('code', 'LIKE', "%" . request()->get('term') . "%");
+            })
+                ->distinct()
+                ->paginate(10);
+
+            return inertia('Adminr/MailTemplates/Index', [
+                'templates' => $templates,
+                'query' => request()->all(['term'])
+            ]);
+        } catch (\Exception | \Error $e) {
             return $this->backError('Error: ' . $e->getMessage());
         }
     }
 
-    public function create(): View|RedirectResponse
+    public function create()
     {
-        try{
-            return view('adminr.templates.create');
-        } catch (\Exception $e){
-            return $this->backError('Error: ' . $e->getMessage());
-        } catch (\Error $e){
+        try {
+            return inertia('Adminr/MailTemplates/Create');
+        } catch (\Exception | \Error $e) {
             return $this->backError('Error: ' . $e->getMessage());
         }
     }
@@ -44,7 +50,7 @@ class TemplateController extends Controller
             'content' => ['required'],
         ]);
 
-        try{
+        try {
             MailTemplate::create([
                 'subject' => trim($request->get('subject')),
                 'purpose' => trim($request->get('purpose')),
@@ -52,27 +58,19 @@ class TemplateController extends Controller
                 'content' => $request->get('content'),
             ]);
 
-            if ($request->ajax()){
-                return $this->successMessage("Mail template created successfully!");
-            }
-
             return $this->backSuccess('Mail template created successfully!');
-        } catch (\Exception $e){
-            return $this->backError('Error: ' . $e->getMessage());
-        } catch (\Error $e){
+        } catch (\Exception | \Error $e) {
             return $this->backError('Error: ' . $e->getMessage());
         }
     }
 
 
-    public function edit($id): View|RedirectResponse
+    public function edit($id)
     {
-        try{
-            $template = MailTemplate::where('id', decrypt($id))->first();
-            return view('adminr.templates.edit', compact('template'));
-        } catch (\Exception $e){
-            return $this->backError('Error: ' . $e->getMessage());
-        } catch (\Error $e){
+        try {
+            $template = MailTemplate::where('id', $id)->first();
+            return inertia('Adminr/MailTemplates/Edit', compact('template'));
+        } catch (\Exception | \Error $e) {
             return $this->backError('Error: ' . $e->getMessage());
         }
     }
@@ -85,28 +83,24 @@ class TemplateController extends Controller
             'content' => ['required'],
         ]);
 
-        try{
+        try {
             MailTemplate::where('id', $id)->update([
                 'subject' => trim($request->get('subject')),
                 'purpose' => trim($request->get('purpose')),
                 'content' => $request->get('content'),
             ]);
             return $this->backSuccess('Mail template updated successfully!');
-        } catch (\Exception $e){
-            return $this->backError('Error: ' . $e->getMessage());
-        } catch (\Error $e){
+        } catch (\Exception | \Error $e) {
             return $this->backError('Error: ' . $e->getMessage());
         }
     }
 
     public function destroy($id): RedirectResponse
     {
-        try{
+        try {
             MailTemplate::where('id', $id)->delete();
             return $this->backSuccess('Template deleted successfully!');
-        } catch (\Exception $e){
-            return back()->with('error', 'Error: ' . $e->getMessage());
-        } catch (\Error $e){
+        } catch (\Exception | \Error $e) {
             return back()->with('error', 'Error: ' . $e->getMessage());
         }
     }

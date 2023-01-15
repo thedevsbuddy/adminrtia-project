@@ -1,15 +1,15 @@
 <template>
-  <button class="w-full text-left px-4 py-2 hover:bg-slate-100">
+    <Link v-if="props.type != 'label'" v-bind="$attrs"
+        class="w-full block text-left text-slate-600 px-4 py-2 text-sm hover:bg-slate-100 whitespace-nowrap">
     <slot />
-  </button>
+    </Link>
+    <span v-else v-bind="$attrs"
+        class="w-full block text-left bg-slate-200 text-slate-700 px-4 py-2 text-xs font-semibold tracking-wider whitespace-nowrap">
+        <slot />
+    </span>
 </template>
 <script setup>
-import { defineProps } from "vue";
-
 const props = defineProps({
-  label: {
     type: String,
-    default: "Dropdown button"
-  }
 })
 </script>

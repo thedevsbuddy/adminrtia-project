@@ -17,6 +17,8 @@
                         </div>
                     </CardHeader>
                     <CardContent class="">
+                        <!-- Show splash message -->
+                        <splash-message />
                         <div class="flex space-x-4">
                             <div class="w-3/5">
                                 <div class="grid md:grid-cols-2 gap-x-6 gap-y-2">

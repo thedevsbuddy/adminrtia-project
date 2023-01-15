@@ -7,54 +7,53 @@
             <XButton as="link" icon="list" :href="route('adminr.users.index')" label="View All" />
         </page-header>
 
-        <div>
-            <form @submit.prevent="updateUser">
-                <Card>
-                    <CardHeader>
-                        <h3 class="heading-sm">Edit user</h3>
-                        <div>
-                            <a href="#" class=""></a>
-                        </div>
-                    </CardHeader>
-                    <CardContent class="relative">
-                        <loading-progress v-if="form.processing" :message="`Loading (${form.progress.percentage}%)`" />
-                        <!-- Show splash message -->
-                        <splash-message />
-                        <div class="flex space-x-4">
-                            <div class="w-3/5">
-                                <div class="grid md:grid-cols-2 gap-x-6 gap-y-2">
-                                    <form-input label="Name" :error="form.errors.name" required :value="form.name"
-                                        v-model="form.name" placeholder="John Doe" />
-                                    <form-input label="Username" :error="form.errors.username" required
-                                        :value="form.username" v-model="form.username" placeholder="johndoe" />
-                                    <form-input label="Email" :error="form.errors.email" type="email" required
-                                        :value="form.email" v-model="form.email" placeholder="johndoe@example.com" />
-                                    <form-input label="Phone" :value="form.phone" v-model="form.phone" is-optional
-                                        placeholder="+91-9876543210" />
-                                    <form-input label="Password" :error="form.errors.password" type="password"
-                                        v-model="form.password" placeholder="********" />
-                                    <form-input label="Confirm Password" :error="form.errors.confirm_password"
-                                        type="password" v-model="form.confirm_password" placeholder="********" />
-                                </div>
-                            </div>
-                            <div class="w-2/5">
-                                <div>
-                                    <form-select label="Role" required placeholder="Select Role" :options="roles"
-                                        v-model="form.role" :error="form.errors.role" />
-                                    <!-- <form-input label="Avatar" :error="form.errors.avatar" type="file"
-                                        v-model="form.avatar" /> -->
-                                    <form-avatar-input v-model="form.avatar" :default="asset(props.user.avatar)"
-                                        class="mx-auto mt-5" />
-                                </div>
+        <form @submit.prevent="updateUser">
+            <Card>
+                <CardHeader>
+                    <h3 class="heading-sm">Edit user</h3>
+                    <div>
+                        <a href="#" class=""></a>
+                    </div>
+                </CardHeader>
+                <CardContent class="relative">
+                    <loading-progress v-if="form.processing" :message="`Loading (${form.progress.percentage}%)`" />
+                    <!-- Show splash message -->
+                    <splash-message />
+                    <div class="flex space-x-4">
+                        <div class="w-3/5">
+                            <div class="grid md:grid-cols-2 gap-x-6 gap-y-2">
+                                <form-input label="Name" :error="form.errors.name" required :value="form.name"
+                                    v-model="form.name" placeholder="John Doe" />
+                                <form-input label="Username" :error="form.errors.username" required
+                                    :value="form.username" v-model="form.username" placeholder="johndoe" />
+                                <form-input label="Email" :error="form.errors.email" type="email" required
+                                    :value="form.email" v-model="form.email" placeholder="johndoe@example.com" />
+                                <form-input label="Phone" :value="form.phone" v-model="form.phone" is-optional
+                                    placeholder="+91-9876543210" />
+                                <form-input label="Password" :error="form.errors.password" type="password"
+                                    v-model="form.password" placeholder="********" />
+                                <form-input label="Confirm Password" :error="form.errors.confirm_password"
+                                    type="password" v-model="form.confirm_password" placeholder="********" />
                             </div>
                         </div>
-                    </CardContent>
-                    <CardFooter class="justify-end">
-                        <XButton type="submit" :hero-icon="FolderPlusIcon" :is-busy="form.processing" label="Update" />
-                    </CardFooter>
-                </Card>
-            </form>
-        </div>
+                        <div class="w-2/5">
+                            <div>
+                                <form-select label="Role" required placeholder="Select Role" :options="roles"
+                                    v-model="form.role" :error="form.errors.role" />
+                                <!-- <form-input label="Avatar" :error="form.errors.avatar" type="file"
+                                                v-model="form.avatar" /> -->
+                                <form-avatar-input v-model="form.avatar" :default="asset(props.user.avatar)"
+                                    class="mx-auto mt-5" />
+                            </div>
+                        </div>
+                    </div>
+                </CardContent>
+                <CardFooter class="justify-end">
+                    <XButton type="submit" :hero-icon="FolderPlusIcon" :is-busy="form.processing" label="Update" />
+                </CardFooter>
+            </Card>
+        </form>
+
     </section>
 </template>
 <script>

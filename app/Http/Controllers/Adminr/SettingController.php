@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Adminr;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
@@ -14,31 +14,30 @@ use Illuminate\View\View;
 
 class SettingController extends Controller
 {
-    public function index(): View|RedirectResponse
+    public function index()
     {
         try {
             return view('adminr.settings.index');
-        } catch (\Exception | \Error $e){
+        } catch (\Exception | \Error $e) {
             info($e->getMessage());
             return $this->backError('Something went wrong!');
         }
     }
 
-    public function general(): View|RedirectResponse
+    public function general()
     {
         try {
-            return view('adminr.settings.general');
-        } catch (\Exception | \Error $e){
-            info($e->getMessage());
+            return inertia('Adminr/Settings/General');
+        } catch (\Exception | \Error $e) {
             return $this->backError('Something went wrong!');
         }
     }
-    
+
     public function email(): View|RedirectResponse
     {
         try {
             return view('adminr.settings.email');
-        } catch (\Exception | \Error $e){
+        } catch (\Exception | \Error $e) {
             info($e->getMessage());
             return $this->backError('Something went wrong!');
         }
@@ -48,30 +47,35 @@ class SettingController extends Controller
     {
         try {
             return view('adminr.settings.features');
-        } catch (\Exception | \Error $e){
+        } catch (\Exception | \Error $e) {
             info($e->getMessage());
             return $this->backError('Something went wrong!');
         }
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
-        try{
-            foreach($request->except('_token') as $key => $input) {
+        try {
+            foreach ($request->except('_token') as $key => $input) {
                 $setting = Setting::where('option', $key)->first();
-                if ($input instanceof UploadedFile){
-                    if($request->hasFile($key)){
-                        $value = $this->uploadFile($input, 'settings', Str::snake($key).'_')->getFilePath();
-                        if($setting){
-                            $this->deleteStorageFile($setting->value);
+                if ($input != '' && !is_null($input)) {
+                    if ($input instanceof UploadedFile) {
+                        if ($request->file($key)) {
+                            $value = $this->uploadFile($input, 'settings', Str::snake($key) . '_')->getFilePath();
+                            if ($setting) {
+                                $this->deleteStorageFile($setting->value);
+                            }
+                        } else {
+                            $value = $setting->value;
                         }
                     } else {
-                        $value = $setting->value;
+                        $value = is_array($input) ? json_encode($input) : $input;
                     }
                 } else {
-                    $value = is_array($input) ? json_encode($input) : $input;
+                    if ($setting) $value = $setting->value;
                 }
-                if($setting){
+
+                if ($setting) {
                     $setting->update([
                         "option" => $key,
                         "value" => $value
@@ -86,15 +90,13 @@ class SettingController extends Controller
                 /// Clear all the setting cache
                 /// To get latest updated data
 
-                Cache::forget('getSetting'.Str::studly($key));
+                Cache::forget('allSettings');
+                Cache::forget('getSetting' . Str::studly($key));
             }
 
             return $this->backSuccess('Setting updated successfully');
-        } catch (\Exception $e){
-            return $this->backError('Error: ' . $e->getMessage());
-        } catch (\Error $e){
+        } catch (\Exception | \Error $e) {
             return $this->backError('Error: ' . $e->getMessage());
         }
     }
 }
-

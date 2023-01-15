@@ -5,10 +5,14 @@
             <span v-if="props.required" class="font-bold text-red-500">*</span>
             <span v-if="props.isOptional" class="font-bold text-xs">(Optional)</span>
         </label>
-        <input :type="props.type" v-bind="$attrs" :model-value="props.modelValue"
+        <input v-if="!multiline" :type="props.type" v-bind="$attrs" :model-value="props.modelValue"
             @input="e => emit('update:modelValue', e.target.value)"
             :class="`w-full block rounded-0 text-sm text-slate-500 border ${props.error ? 'border-red-500' : ''} px-4 py-1.5 outline-none focus:ring-1 focus:ring-accent/50 ${props.inputStyle}`"
             :placeholder="props.placeholder" />
+        <textarea v-else v-bind="$attrs" :model-value="props.modelValue"
+            @input="e => emit('update:modelValue', e.target.value)"
+            :class="`w-full block rounded-0 text-sm text-slate-500 border ${props.error ? 'border-red-500' : ''} px-4 py-1.5 outline-none focus:ring-1 focus:ring-accent/50 ${props.inputStyle}`"
+            :placeholder="props.placeholder"></textarea>
         <span v-if="props.error" class="text-red-500 font-semibold text-xs tracking-wider">{{ props.error }}</span>
     </div>
 </template>
@@ -26,6 +30,7 @@ const props = defineProps({
     },
     class: String,
     required: Boolean,
+    multiline: Boolean,
 })
 const emit = defineEmits(['update:modelValue'])
 </script>

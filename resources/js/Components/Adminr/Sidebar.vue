@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col w-72 bg-slate-800 text-light border-r border-slate-700">
+    <div class="flex flex-col w-72 bg-slate-800 text-light border-r border-slate-700 z-50">
         <div class="h-12 shrink-0 px-4 py-2 flex items-center  justify-center">
             <span class="block text-lg font-semibold">App Name</span>
         </div>
@@ -28,7 +28,6 @@
     </div>
 </template>
 <script setup>
-import { defineProps } from "vue";
 const navItems = [
     {
         label: "Dashboard",

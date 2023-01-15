@@ -12,8 +12,18 @@ Object.defineProperty(String.prototype, "ucFirst", {
 });
 
 Object.defineProperty(String.prototype, "snake", {
-    value: function ucFirst() {
+    value: function snake() {
         return this.split(" ").join("_");
+    },
+    writable: true,
+    configurable: true,
+});
+
+Object.defineProperty(String.prototype, "kebab", {
+    value: function kebab() {
+        return this.split(" ")
+            .map((e) => e.toLowerCase())
+            .join("-");
     },
     writable: true,
     configurable: true,

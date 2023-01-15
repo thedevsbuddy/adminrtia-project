@@ -6,16 +6,39 @@ import { createInertiaApp, Link, Head } from "@inertiajs/inertia-vue3";
 import { Inertia } from "@inertiajs/inertia";
 import AdminrLayout from "./Layouts/AdminrLayout";
 import { InertiaProgress } from "@inertiajs/progress";
-import Toast from "vue-toastification";
-import "vue-toastification/dist/index.css";
+import VMdEditor from "@kangc/v-md-editor";
+import "@kangc/v-md-editor/lib/style/base-editor.css";
+import githubTheme from "@kangc/v-md-editor/lib/theme/github.js";
+import "@kangc/v-md-editor/lib/theme/style/github.css";
+import enUS from "@kangc/v-md-editor/lib/lang/en-US";
+
+// highlightjs
+import hljs from "highlight.js";
+
+VMdEditor.use(githubTheme, {
+    Hljs: hljs,
+});
+VMdEditor.lang.use("en-US", enUS);
 
 window.Inertia = Inertia;
 
+/// Create asset helper for the vue app
 function asset(path) {
     if (path.includes("http://") || path.includes("https://")) return path;
     var base_path = window._asset || "";
     return base_path + path;
 }
+
+/// Share App Settings with vue app
+function getSetting(key) {
+    return (
+        JSON.parse(window._settings.replaceAll("&quot;", `"`)).find(
+            (s) => s.option == key
+        )?.value ?? null
+    );
+}
+
+window.getSetting = getSetting;
 
 createInertiaApp({
     resolve: (name) => {
@@ -26,7 +49,13 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         const app = createApp({ render: () => h(App, props) })
             .use(plugin)
-            .mixin({ methods: { route, asset } });
+            .mixin({
+                methods: {
+                    route,
+                    asset,
+                    getSetting,
+                },
+            });
 
         app.component("Link", Link);
         app.component("Head", Head);
@@ -43,11 +72,7 @@ createInertiaApp({
             );
         app.config.devtools = true;
 
-        const options = {
-            // You can set your default options here
-        };
-
-        app.use(Toast, options);
+        app.use(VMdEditor);
         app.mount(el);
     },
 });

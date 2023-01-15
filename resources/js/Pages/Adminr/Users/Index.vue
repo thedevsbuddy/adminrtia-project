@@ -35,7 +35,7 @@
                                 class="divide-x text-sm odd:bg-white even:bg-light">
                                 <td class="text-center p-2 w-12">{{ ++index }}</td>
                                 <td class="p-2 text-center w-16"><img :src="asset(user.avatar)"
-                                        class="rounded-full w-12 h-12" alt=""></td>
+                                        class="rounded-full w-12 h-12 object-cover" alt=""></td>
                                 <td class="p-2">{{ user.name }}</td>
                                 <td class="p-2">{{ user.username }}</td>
                                 <td class="p-2">{{ user.email }}</td>
