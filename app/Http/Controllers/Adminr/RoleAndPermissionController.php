@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Adminr;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -12,60 +12,63 @@ use Spatie\Permission\Models\Role;
 
 class RoleAndPermissionController extends Controller
 {
-    public function index(): View|RedirectResponse
+    public function index()
     {
-        try{
-            $roles = Role::all();
-            $permissions = Permission::whereNull('resource')->get();
+        try {
+            $roles = Role::with('permissions')->get();
+            $permissions = Permission::with('roles')->whereNull('resource')->get();
 
-            return view('adminr.roles-and-permissions.index', compact('roles', 'permissions'));
-        } catch (\Exception $e){
-            return $this->backError('Error: ' . $e->getMessage());
-        } catch (\Error $e){
+            return inertia('Adminr/RolesAndPermissions/Index', compact('roles', 'permissions'));
+        } catch (\Exception | \Error $e) {
             return $this->backError('Error: ' . $e->getMessage());
         }
     }
 
     public function assignPermission(Request $request): JsonResponse
     {
+        try {
+            $role = Role::where('id', $request->get('role_id'))->first();
+            $permission = Permission::where('id', $request->get('permission_id'))->first();
 
-        $role = Role::where('id', $request->get('role_id'))->first();
-        $permission = Permission::where('id', $request->get('permission_id'))->first();
-
-        if(!$role->hasPermissionTo($permission)){
-            $role->givePermissionTo($permission);
+            if (!$role->hasPermissionTo($permission)) {
+                $role->givePermissionTo($permission);
+            }
+            return $this->successMessage('Permission assigned to ' . $role->name . ' !');
+        } catch (\Exception | \Error $e) {
+            return $this->backError('Error: ' . $e->getMessage());
         }
-        return $this->successMessage('Permission assigned to '.$role->name.' !');
     }
 
-        public function revokePermission(Request $request): JsonResponse
+    public function revokePermission(Request $request): JsonResponse
     {
+        try {
+            $role = Role::where('id', $request->get('role_id'))->first();
+            $permission = Permission::where('id', $request->get('permission_id'))->first();
 
-        $role = Role::where('id', $request->get('role_id'))->first();
-        $permission = Permission::where('id', $request->get('permission_id'))->first();
-
-        if($role->hasPermissionTo($permission)){
-            $role->revokePermissionTo($permission);
+            if ($role->hasPermissionTo($permission)) {
+                $role->revokePermissionTo($permission);
+            }
+            return $this->successMessage('Permission revoked from ' . $role->name . ' !');
+        } catch (\Exception | \Error $e) {
+            return $this->backError('Error: ' . $e->getMessage());
         }
-        return $this->successMessage('Permission revoked from '.$role->name.' !');
     }
 
 
     public function storeRole(Request $request): RedirectResponse
     {
         $request->validate([
-           'name' => ['required', 'unique:roles'],
+            'name' => ['required', 'unique:roles'],
         ], [
-            "name.unique" => "Role with name \"".$request->get('name')."\" already exist."
+            "name.unique" => "Role with name \"" . $request->get('name') . "\" already exist."
         ]);
-        try{
+
+        try {
             Role::create([
                 'name' => $request->get('name')
             ]);
             return $this->backSuccess('Role created successfully!');
-        } catch (\Exception $e){
-            return $this->backError('Error: ' . $e->getMessage());
-        } catch (\Error $e){
+        } catch (\Exception | \Error $e) {
             return $this->backError('Error: ' . $e->getMessage());
         }
     }
@@ -75,16 +78,39 @@ class RoleAndPermissionController extends Controller
         $request->validate([
             'name' => ['required', 'unique:permissions'],
         ], [
-            "name.unique" => "Permission with name \"".$request->get('name')."\" already exist."
+            "name.unique" => "Permission with name \"" . $request->get('name') . "\" already exist."
         ]);
-        try{
+        try {
             Permission::create([
                 'name' => $request->get('name')
             ]);
             return $this->backSuccess('Permission created successfully!');
-        } catch (\Exception $e){
+        } catch (\Exception | \Error $e) {
             return $this->backError('Error: ' . $e->getMessage());
-        } catch (\Error $e){
+        }
+    }
+
+    public function togglePermission(Request $request)
+    {
+        try {
+            $role = Role::where('id', $request->get('role_id'))->first();
+            $permission = Permission::where('id', $request->get('permission_id'))->first();
+            $msg = '';
+            if ($request->get('action') == 'assign') {
+                /// Assign the permission
+                if (!$role->hasPermissionTo($permission)) {
+                    $role->givePermissionTo($permission);
+                }
+                $msg = 'Permission assigned successgully.';
+            } else {
+                /// Revoke the permission
+                if ($role->hasPermissionTo($permission)) {
+                    $role->revokePermissionTo($permission);
+                }
+                $msg = 'Permission revoked successgully.';
+            }
+            return $this->successMessage($msg);
+        } catch (\Exception | \Error $e) {
             return $this->backError('Error: ' . $e->getMessage());
         }
     }

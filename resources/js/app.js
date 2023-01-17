@@ -28,6 +28,7 @@ function asset(path) {
     var base_path = window._asset || "";
     return base_path + path;
 }
+window.asset = asset;
 
 /// Share App Settings with vue app
 function getSetting(key) {
@@ -37,10 +38,13 @@ function getSetting(key) {
         )?.value ?? null
     );
 }
-
 window.getSetting = getSetting;
 
 createInertiaApp({
+    title: (title) =>
+        `${title} ${getSetting("title_separator")} ${getSetting(
+            "app_name"
+        )} ${getSetting("title_separator")} ${getSetting("app_tagline")}`,
     resolve: (name) => {
         const page = require(`./Pages/${name}`).default;
         page.layout = page.layout || AdminrLayout;

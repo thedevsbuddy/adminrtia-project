@@ -9,11 +9,11 @@
 
         <div>
             <form @submit.prevent="updateTemplate">
-                <Card>
-                    <CardHeader>
+                <card>
+                    <card-header>
                         <h3 class="heading-sm">Modify template</h3>
-                    </CardHeader>
-                    <CardContent class="">
+                    </card-header>
+                    <card-content class="">
                         <!-- Show splash message -->
                         <splash-message />
                         <div class="flex space-x-6">
@@ -72,11 +72,11 @@
 
                             </div>
                         </div>
-                    </CardContent>
-                    <CardFooter class="justify-end">
+                    </card-content>
+                    <card-footer class="justify-end">
                         <XButton type="submit" :hero-icon="FolderPlusIcon" :is-busy="form.processing" label="Update" />
-                    </CardFooter>
-                </Card>
+                    </card-footer>
+                </card>
             </form>
         </div>
     </section>

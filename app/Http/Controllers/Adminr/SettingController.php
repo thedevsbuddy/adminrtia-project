@@ -33,20 +33,20 @@ class SettingController extends Controller
         }
     }
 
-    public function email(): View|RedirectResponse
+    public function email()
     {
         try {
-            return view('adminr.settings.email');
+            return inertia('Adminr/Settings/Email');
         } catch (\Exception | \Error $e) {
             info($e->getMessage());
             return $this->backError('Something went wrong!');
         }
     }
 
-    public function features(): View|RedirectResponse
+    public function features()
     {
         try {
-            return view('adminr.settings.features');
+            return inertia('Adminr/Settings/Features');
         } catch (\Exception | \Error $e) {
             info($e->getMessage());
             return $this->backError('Something went wrong!');

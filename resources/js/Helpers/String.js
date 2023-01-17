@@ -21,9 +21,19 @@ Object.defineProperty(String.prototype, "snake", {
 
 Object.defineProperty(String.prototype, "kebab", {
     value: function kebab() {
-        return this.split(" ")
+        return this.split(/\s/)
             .map((e) => e.toLowerCase())
             .join("-");
+    },
+    writable: true,
+    configurable: true,
+});
+
+Object.defineProperty(String.prototype, "title", {
+    value: function title() {
+        return this.split(/_|-/)
+            .map((e) => e.ucFirst())
+            .join(" ");
     },
     writable: true,
     configurable: true,

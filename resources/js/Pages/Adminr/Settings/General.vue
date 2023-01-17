@@ -6,11 +6,11 @@
         <page-header title="Update general settings" />
         <div>
             <form @submit.prevent="storeSettings">
-                <Card>
-                    <CardHeader>
+                <card>
+                    <card-header>
                         <h3 class="heading-sm">Manage General Settings</h3>
-                    </CardHeader>
-                    <CardContent class="relative">
+                    </card-header>
+                    <card-content class="relative">
                         <loading-progress v-if="form.processing" :message="`Loading (${form.progress.percentage}%)`" />
                         <!-- Show splash message -->
                         <splash-message />
@@ -45,11 +45,11 @@
                                 </div>
                             </div>
                         </div>
-                    </CardContent>
-                    <CardFooter class="justify-end">
+                    </card-content>
+                    <card-footer class="justify-end">
                         <XButton type="submit" :hero-icon="FolderPlusIcon" :is-busy="form.processing" label="Save" />
-                    </CardFooter>
-                </Card>
+                    </card-footer>
+                </card>
             </form>
         </div>
     </section>

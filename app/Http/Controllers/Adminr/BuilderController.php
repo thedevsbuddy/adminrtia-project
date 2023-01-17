@@ -12,7 +12,7 @@ class BuilderController extends Controller
 
     public function index(): Response|ResponseFactory
     {
-        return inertia("Adminr/Index");
+        return inertia("Adminr/Dashboard");
     }
 
     /**

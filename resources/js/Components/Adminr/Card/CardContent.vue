@@ -1,5 +1,5 @@
 <template>
-    <div v-bind="$attrs" class="bg-white px-3 py-2 rounded-b">
+    <div v-bind="$attrs" class="px-3 py-2">
         <slot />
     </div>
 </template>

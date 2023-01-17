@@ -24,10 +24,7 @@ const props = defineProps({
     label: String,
     as: {
         type: String,
-        default: 'button',
-        validator: value => {
-            return ['link', 'button'].includes(value)
-        }
+        default: 'button'
     },
     icon: {
         type: String,

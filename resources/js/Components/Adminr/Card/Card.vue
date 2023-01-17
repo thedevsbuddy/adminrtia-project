@@ -1,5 +1,5 @@
 <template>
-    <div class="shadow-sm rounded border">
+    <div v-bind="$attrs" class="shadow-sm rounded border">
         <slot />
     </div>
 </template>

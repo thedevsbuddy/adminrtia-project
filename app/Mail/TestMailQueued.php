@@ -13,7 +13,6 @@ class TestMailQueued extends Mailable implements ShouldQueue
 
     public function __construct()
     {
-
     }
 
     public function build(): static

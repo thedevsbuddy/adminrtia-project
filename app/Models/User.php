@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use App\Traits\HasExcludeScope;
 use App\Traits\HasMailable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -41,9 +42,9 @@ class User extends Authenticatable
     public function avatar(): Attribute
     {
         return Attribute::make(
-            get: function($val) {
-                $avatar = !is_null($val) ? $val : 'https://ui-avatars.com/api/?name='.$this->name.'&background=random&v=' . rand(0, 999999);
-                if(Str::contains(request()->url(), '/api')){
+            get: function ($val) {
+                $avatar = !is_null($val) ? $val : 'https://ui-avatars.com/api/?name=' . $this->name . '&background=random&v=' . rand(0, 999999);
+                if (Str::contains(request()->url(), '/api')) {
                     return asset($avatar);
                 }
                 return $avatar;
@@ -54,7 +55,7 @@ class User extends Authenticatable
     public function username(): Attribute
     {
         return Attribute::make(
-            set: function($val) {
+            set: function ($val) {
                 return Str::lower($val);
             },
         );
@@ -63,9 +64,9 @@ class User extends Authenticatable
     public function name(): Attribute
     {
         return Attribute::make(
-            set: function($val) {
-            return Str::title($val);
-        },
+            set: function ($val) {
+                return Str::title($val);
+            },
         );
     }
 
@@ -76,7 +77,7 @@ class User extends Authenticatable
             $roles = $roles->all();
         }
 
-        if (! is_array($roles)) {
+        if (!is_array($roles)) {
             $roles = [$roles];
         }
 
@@ -92,7 +93,7 @@ class User extends Authenticatable
         }, $roles);
 
         return $query->whereHas('roles', function (Builder $subQuery) use ($roles) {
-            $subQuery->whereNotIn(config('permission.table_names.roles').'.id', \array_column($roles, 'id'));
+            $subQuery->whereNotIn(config('permission.table_names.roles') . '.id', \array_column($roles, 'id'));
         });
     }
 
@@ -101,7 +102,7 @@ class User extends Authenticatable
         return $this->hasOne(VerificationToken::class);
     }
 
-    #[Pure] public function hasDefaultAvatar(): bool
+    public function hasDefaultAvatar(): bool
     {
         return Str::contains($this->avatar, 'default-avatar.png');
     }
@@ -109,7 +110,7 @@ class User extends Authenticatable
     public function isVerified(): Attribute
     {
         return Attribute::make(
-            get: function() {
+            get: function () {
                 return $this->email_verified_at != null;
             },
         );

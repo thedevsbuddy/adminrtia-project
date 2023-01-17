@@ -18,7 +18,7 @@
     @inertiaHead
 </head>
 
-<body class="antialiased">
+<body class="antialiased bg-light">
     @inertia
 </body>
 

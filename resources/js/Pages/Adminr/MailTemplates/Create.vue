@@ -9,14 +9,14 @@
 
         <div>
             <form @submit.prevent="storeTemplate">
-                <Card>
-                    <CardHeader>
+                <card>
+                    <card-header>
                         <h3 class="heading-sm">Add a new template</h3>
                         <div>
                             <a href="#" class=""></a>
                         </div>
-                    </CardHeader>
-                    <CardContent class="">
+                    </card-header>
+                    <card-content class="">
                         <!-- Show splash message -->
                         <splash-message />
                         <div class="flex space-x-6">
@@ -73,11 +73,11 @@
 
                             </div>
                         </div>
-                    </CardContent>
-                    <CardFooter class="justify-end">
+                    </card-content>
+                    <card-footer class="justify-end">
                         <XButton type="submit" :hero-icon="FolderPlusIcon" :is-busy="form.processing" label="Save" />
-                    </CardFooter>
-                </Card>
+                    </card-footer>
+                </card>
             </form>
         </div>
     </section>

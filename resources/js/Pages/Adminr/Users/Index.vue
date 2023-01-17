@@ -8,15 +8,15 @@
         </page-header>
 
         <div>
-            <Card>
-                <CardHeader class="justify-between">
+            <card class="bg-white">
+                <card-header class="justify-between">
                     <h3 class="heading-sm">Users list in the system</h3>
                     <div>
                         <form-input placeholder="Search here..." :value="filters.term" v-model="filters.term"
                             input-style="rounded-full " />
                     </div>
-                </CardHeader>
-                <CardContent class="px-0 py-0">
+                </card-header>
+                <card-content class="bg-white px-0 py-0">
                     <table class="w-full">
                         <thead class="bg-slate-100 border-b text-sm">
                             <tr class="divide-x">
@@ -68,11 +68,11 @@
                             </tr>
                         </tbody>
                     </table>
-                </CardContent>
-                <CardFooter class="justify-end">
+                </card-content>
+                <card-footer class="justify-end">
                     <pagination :links="props.users.links" />
-                </CardFooter>
-            </Card>
+                </card-footer>
+            </card>
         </div>
     </section>
 </template>

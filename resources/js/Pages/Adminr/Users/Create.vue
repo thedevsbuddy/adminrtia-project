@@ -9,14 +9,14 @@
 
         <div>
             <form @submit.prevent="storeUser">
-                <Card>
-                    <CardHeader>
+                <card>
+                    <card-header>
                         <h3 class="heading-sm">Users list in the system</h3>
                         <div>
                             <a href="#" class=""></a>
                         </div>
-                    </CardHeader>
-                    <CardContent class="">
+                    </card-header>
+                    <card-content class="">
                         <!-- Show splash message -->
                         <splash-message />
                         <div class="flex space-x-4">
@@ -46,11 +46,11 @@
                                 </div>
                             </div>
                         </div>
-                    </CardContent>
-                    <CardFooter class="justify-end">
+                    </card-content>
+                    <card-footer class="justify-end">
                         <XButton type="submit" :hero-icon="FolderPlusIcon" :is-busy="form.processing" label="Save" />
-                    </CardFooter>
-                </Card>
+                    </card-footer>
+                </card>
             </form>
         </div>
     </section>

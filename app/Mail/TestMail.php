@@ -13,7 +13,6 @@ class TestMail extends Mailable
 
     public function __construct()
     {
-
     }
 
     public function build(): static

@@ -8,14 +8,14 @@
         </page-header>
 
         <form @submit.prevent="updateUser">
-            <Card>
-                <CardHeader>
+            <card>
+                <card-header>
                     <h3 class="heading-sm">Edit user</h3>
                     <div>
                         <a href="#" class=""></a>
                     </div>
-                </CardHeader>
-                <CardContent class="relative">
+                </card-header>
+                <card-content class="relative">
                     <loading-progress v-if="form.processing" :message="`Loading (${form.progress.percentage}%)`" />
                     <!-- Show splash message -->
                     <splash-message />
@@ -47,11 +47,11 @@
                             </div>
                         </div>
                     </div>
-                </CardContent>
-                <CardFooter class="justify-end">
+                </card-content>
+                <card-footer class="justify-end">
                     <XButton type="submit" :hero-icon="FolderPlusIcon" :is-busy="form.processing" label="Update" />
-                </CardFooter>
-            </Card>
+                </card-footer>
+            </card>
         </form>
 
     </section>

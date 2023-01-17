@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Adminr;
 
 use App\Http\Controllers\Controller;
 use App\Mail\TestMail;
@@ -13,14 +13,14 @@ class MailTestController extends Controller
 {
     public function send(): RedirectResponse
     {
-        try{
-            if((int)getSetting('mail_queue_enabled')){
+        try {
+            if ((int)getSetting('mail_queue_enabled') == 1) {
                 Mail::to(request('email'))->send(new TestMailQueued());
             } else {
                 Mail::to(request('email'))->send(new TestMail());
             }
             return $this->backSuccess(message: 'Mail send successfully!');
-        } catch (\Exception | \Error $e){
+        } catch (\Exception | \Error $e) {
             info($e->getMessage());
             return $this->backError(message: 'Something went wrong!');
         }

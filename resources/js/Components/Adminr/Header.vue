@@ -1,5 +1,5 @@
 <template>
-    <div class="shrink-0 h-12 bg-slate-800 text-light border-b sticky top-0 z-50">
+    <div class="shrink-0 h-14 bg-slate-800 text-light border-b sticky top-0 z-50">
         <nav class="px-4 py-2 flex items-center justify-between h-full">
             <ul class="flex h-full items-center space-x-2 ">
                 <li>
@@ -71,11 +71,13 @@ const dropdownOptions = [
     },
     {
         label: "Email",
-        type: "link"
+        type: "link",
+        url: route('adminr.settings.email'),
     },
     {
         label: "Features",
-        type: "link"
+        type: "link",
+        url: route('adminr.settings.features'),
     },
 ];
 </script>
